@@ -68,7 +68,7 @@ def parse_arguments():
 
 def check_for_completion():
     try:
-        with open(FILE_COUNT, "r", newline="") as file_obj:
+        with open(FILE_COUNT, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) == len(GITHUB_TOOLS):
                 raise shared.QuantifyingException(

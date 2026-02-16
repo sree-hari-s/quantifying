@@ -74,7 +74,7 @@ def check_for_completion():
     completed_units = False
 
     try:
-        with open(FILE_1_METRICS, "r", newline="") as file_obj:
+        with open(FILE_1_METRICS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 0:
                 completed_metrics = True
@@ -82,7 +82,7 @@ def check_for_completion():
         pass  # File may not be found without --enable-save, etc.
 
     try:
-        with open(FILE_2_UNITS, "r", newline="") as file_obj:
+        with open(FILE_2_UNITS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 30:
                 completed_units = True

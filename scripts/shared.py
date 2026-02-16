@@ -233,20 +233,22 @@ def paths_list_update(logger, paths_list, old_quarter, new_quarter):
     return paths_list
 
 
-def rows_to_csv(args, file_path, fieldnames, rows):
+def rows_to_csv(args, file_path, fieldnames, rows, append=False):
     """Write rows to a CSV file if saving is enabled."""
     if not args.enable_save:
         return
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    with open(file_path, "w", encoding="utf-8", newline="\n") as file_obj:
+    mode = "a" if append else "w"
+    with open(file_path, mode, encoding="utf-8", newline="\n") as file_obj:
         writer = csv.DictWriter(
             file_obj,
             fieldnames=fieldnames,
             dialect="unix",
         )
-        writer.writeheader()
+        if not append:
+            writer.writeheader()
         for row in rows:
             writer.writerow(row)
 
