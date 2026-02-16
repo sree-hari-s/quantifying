@@ -219,7 +219,7 @@ def query_smithsonian(args, session):
             " API key is set in .env",
             1,
         )
-    LOGGER.info("Fetch CC0 metrics and units from units from Smithsonain")
+    LOGGER.info("Fetch CC0 metrics and units from units from Smithsonian")
     url = "https://api.si.edu/openaccess/api/v1.0/stats"
     params = {"api_key": DATA_GOV_API_KEY}
     try:

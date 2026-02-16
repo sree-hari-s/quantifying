@@ -109,9 +109,6 @@ def process_totals_by_records(args, count_data):
         CC0_records_with_CC0_media = int(row.CC0_RECORDS_WITH_CC0_MEDIA)
         total_objects = int(row.TOTAL_OBJECTS)
 
-        if CC0_records == 0 and CC0_records_with_CC0_media == 0:
-            continue
-
         if unit not in data:
             data[unit] = {
                 "CC0_records": 0,

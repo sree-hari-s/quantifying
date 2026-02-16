@@ -179,7 +179,7 @@ def plot_totals_by_top10_units(args):
         " distribution of top 10 institute member across"
         " Smithsonian Institute with an average of"
         f" {average_unit:,} objects across the top 10"
-        "Institute members.",
+        " Institute members.",
     )
 
 
@@ -244,13 +244,15 @@ def plot_totals_by_records(args):
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
     name_label = "Unit_name"
+    data_label = "Total_objects"
     stack_labels = [
         "CC0_without_media_percentage",
         "CC0_with_media_percentage",
         "Others_percentage",
     ]
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
-    data = data.head(10)
+    data.sort_values(data_label, ascending=True, inplace=True)
+    data = data.tail(10)
     title = "Totals by records"
     plt = plot.stacked_barh_plot(
         args=args,
@@ -275,7 +277,7 @@ def plot_totals_by_records(args):
         title,
         image_path,
         "Plots showing totals by CC0 records. This is the"
-        " breakdown of top 10 records with highest CC0 records"
+        " top 10 records with a breakdown of CC0 records"
         " without media, CC0 records with media and records"
         " that are not associated with CC0.",
     )
