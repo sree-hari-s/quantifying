@@ -73,7 +73,7 @@ def combined_plot(
         height = 2.5
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, figsize=(8, height), width_ratios=(2, 1), layout="constrained"
+        1, 2, figsize=(10, height), width_ratios=(2, 1), layout="constrained"
     )
     colors = colormaps["tab10"].colors
 
@@ -188,7 +188,7 @@ def stacked_barh_plot(
     plt.rcParams.update({"font.family": "monospace", "figure.dpi": 300})
 
     height = max(2.5, 1 + len(data) * 0.5)
-    fig, ax = plt.subplots(figsize=(8, height), layout="constrained")
+    fig, ax = plt.subplots(figsize=(10, height), layout="constrained")
 
     colors = colormaps["tab10"].colors
     left = [0] * len(data)
@@ -222,7 +222,7 @@ def stacked_barh_plot(
         title="Type",
         fontsize="x-small",
         title_fontsize="x-small",
-        loc="upper right",
+        loc="upper left",
         bbox_to_anchor=(1.02, 1),
     )
 

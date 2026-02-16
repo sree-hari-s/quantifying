@@ -150,7 +150,7 @@ def plot_totals_by_top10_units(args):
     data.sort_values(data_label, ascending=True, inplace=True)
     data = data.tail(10)
     average_unit = data["Total_objects"].mean()
-    title = "Top 10 Units"
+    title = "Totals by 10 Units"
     plt = plot.combined_plot(
         args=args,
         data=data,
@@ -233,11 +233,11 @@ def plot_totals_by_lowest10_units(args):
     )
 
 
-def plot_totals_by_records(args):
+def plot_totals_by_top10_unit_records(args):
     """
-    Create plots showing totals by records
+    Create plots showing breakdown of CC0 records by top 10 units
     """
-    LOGGER.info(plot_totals_by_records.__doc__.strip())
+    LOGGER.info(plot_totals_by_top10_unit_records.__doc__.strip())
     file_path = shared.path_join(
         PATHS["data_2-process"],
         "smithsonian_totals_by_records.csv",
@@ -253,7 +253,7 @@ def plot_totals_by_records(args):
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
     data.sort_values(data_label, ascending=True, inplace=True)
     data = data.tail(10)
-    title = "Totals by records"
+    title = "Breakdown of CC0 records by top 10 units"
     plt = plot.stacked_barh_plot(
         args=args,
         data=data,
@@ -262,7 +262,7 @@ def plot_totals_by_records(args):
         stack_labels=stack_labels,
     )
     image_path = shared.path_join(
-        PATHS["data_phase"], "smithsonian_by_records.png"
+        PATHS["data_phase"], "smithsonian_by_top10_unit_records.png"
     )
     LOGGER.info(f"image file: {image_path.replace(PATHS['repo'], '.')}")
     if args.enable_save:
@@ -283,6 +283,56 @@ def plot_totals_by_records(args):
     )
 
 
+def plot_totals_by_lowest10_unit_records(args):
+    """
+    Create plots showing breakdown of CC0 records by lowest 10 units
+    """
+    LOGGER.info(plot_totals_by_lowest10_unit_records.__doc__.strip())
+    file_path = shared.path_join(
+        PATHS["data_2-process"],
+        "smithsonian_totals_by_records.csv",
+    )
+    LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
+    name_label = "Unit_name"
+    data_label = "Total_objects"
+    stack_labels = [
+        "CC0_without_media_percentage",
+        "CC0_with_media_percentage",
+        "Others_percentage",
+    ]
+    data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
+    data.sort_values(data_label, ascending=True, inplace=True)
+    data = data.head(10)
+    title = "Breakdown of CC0 records by lowest 10 units"
+    plt = plot.stacked_barh_plot(
+        args=args,
+        data=data,
+        title=title,
+        name_label=name_label,
+        stack_labels=stack_labels,
+    )
+    image_path = shared.path_join(
+        PATHS["data_phase"], "smithsonian_by_lowest10_unit_records.png"
+    )
+    LOGGER.info(f"image file: {image_path.replace(PATHS['repo'], '.')}")
+    if args.enable_save:
+        # Create the directory if it does not exist
+        os.makedirs(PATHS["data_phase"], exist_ok=True)
+        plt.savefig(image_path)
+
+    shared.update_readme(
+        args,
+        SECTION_FILE,
+        SECTION_TITLE,
+        title,
+        image_path,
+        "Plots showing totals by CC0 records. This is the"
+        " lowest 10 units with a breakdown of CC0 records"
+        " without media, CC0 records with media and records"
+        " that are not associated with CC0.",
+    )
+
+
 def main():
     args = parse_arguments()
     shared.paths_log(LOGGER, PATHS)
@@ -294,7 +344,8 @@ def main():
     smithsonian_intro(args)
     plot_totals_by_top10_units(args)
     plot_totals_by_lowest10_units(args)
-    plot_totals_by_records(args)
+    plot_totals_by_top10_unit_records(args)
+    plot_totals_by_lowest10_unit_records(args)
 
     # Add and commit changes
     args = shared.git_add_and_commit(
