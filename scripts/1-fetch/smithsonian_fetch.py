@@ -39,14 +39,17 @@ HEADER_1_METRICS = [
     "TOTAL_OBJECTS",
 ]
 HEADER_2_UNITS = [
-    "UNIT",
+    "UNIT_CODE",
+    "UNIT_NAME",
     "CC0_RECORDS",
     "CC0_RECORDS_WITH_CC0_MEDIA",
     "TOTAL_OBJECTS",
 ]
 QUARTER = os.path.basename(PATHS["data_quarter"])
 
-unit_map = {
+# Manually compiled unit code and name from URL
+# 'https://github.com/Smithsonian/OpenAccess'
+UNIT_MAP = {
     "AAA": "Archives of American Art",
     "AAG": "Archives of American Gardens",
     "ACM": "Anacostia Community Museum",
@@ -63,17 +66,35 @@ unit_map = {
     "NMAH": "National Museum of American History",
     "NMAI": "National Museum of the American Indian",
     "NMAfA": "National Museum of African Art",
-    "NMNHANTHRO": "NMNH - Anthropology Dept.",
-    "NMNHBIRDS": "NMNH - Vertebrate Zoology - Birds Division",
-    "NMNHBOTANY": "NMNH - Botany Dept.",
-    "NMNHEDUCATION": "NMNH - Education & Outreach",
-    "NMNHENTO": "NMNH - Entomology Dept.",
-    "NMNHFISHES": "NMNH - Vertebrate Zoology - Fishes Division",
-    "NMNHHERPS": "NMNH - Vertebrate Zoology - Herpetology Division",
-    "NMNHINV": "NMNH - Invertebrate Zoology Dept.",
-    "NMNHMAMMALS": "NMNH - Vertebrate Zoology - Mammals Division",
-    "NMNHMINSCI": "NMNH - Mineral Sciences Dept.",
-    "NMNHPALEO": "NMNH - Paleobiology Dept.",
+    "NMNHANTHRO": ("National Musuem of Natural History - Anthropology Dept."),
+    "NMNHBIRDS": (
+        "National Musuem of Natural History"
+        " - Vertebrate Zoology - Birds Division"
+    ),
+    "NMNHBOTANY": ("National Musuem of Natural History - Botany Dept."),
+    "NMNHEDUCATION": (
+        "National Musuem of Natural History" " - Education & Outreach"
+    ),
+    "NMNHENTO": ("National Musuem of Natural History - Entomology Dept."),
+    "NMNHFISHES": (
+        "National Musuem of Natural History"
+        " - Vertebrate Zoology - Fishes Division"
+    ),
+    "NMNHHERPS": (
+        "National Musuem of Natural History"
+        " - Vertebrate Zoology - Herpetology Division"
+    ),
+    "NMNHINV": (
+        "National Musuem of Natural History" " - Invertebrate Zoology Dept."
+    ),
+    "NMNHMAMMALS": (
+        "National Musuem of Natural History"
+        " - Vertebrate Zoology - Mammals Division"
+    ),
+    "NMNHMINSCI": (
+        "National Musuem of Natural History" " - Mineral Sciences Dept."
+    ),
+    "NMNHPALEO": ("National Musuem of Natural History - Paleobiology Dept."),
     "NPG": "National Portrait Gallery",
     "NPM": "National Postal Museum",
     "NZP": "Smithsonian's National Zoo & Conservation Biology Institute",
@@ -179,7 +200,7 @@ def fetch_unit_codes(session):
     except KeyError as e:
         raise shared.QuantifyingException(f"KeyError: {e}", 1)
 
-    map_codes = set(unit_map.keys())
+    map_codes = set(UNIT_MAP.keys())
     new_codes = sorted(api_codes - map_codes)
     removed_codes = sorted(map_codes - api_codes)
 
@@ -228,7 +249,8 @@ def query_smithsonian(args, session):
             continue
         data_units.append(
             {
-                "UNIT": unit_map.get(unit["unit"], unit["unit"]),
+                "UNIT_CODE": unit["unit"],
+                "UNIT_NAME": UNIT_MAP.get(unit["unit"], unit["unit"]),
                 "CC0_RECORDS": unit["metrics"]["CC0_records"],
                 "CC0_RECORDS_WITH_CC0_MEDIA": unit["metrics"][
                     "CC0_records_with_CC0_media"
@@ -236,7 +258,7 @@ def query_smithsonian(args, session):
                 "TOTAL_OBJECTS": unit["total_objects"],
             }
         )
-    data_units = sorted(data_units, key=itemgetter("UNIT"))
+    data_units = sorted(data_units, key=itemgetter("UNIT_CODE"))
     LOGGER.info(f"Fetched stats for {len(data_units)} units")
     return data_metrics, data_units
 

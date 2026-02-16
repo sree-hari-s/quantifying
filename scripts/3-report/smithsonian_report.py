@@ -111,7 +111,7 @@ def smithsonian_intro(args):
     CC0_records_with_media = data["CC0_records_with_CC0_media"].sum()
     CC0_media_percentage = f"{data['CC0_with_media_percentage'].mean():.2f}%"
     num_units = len(data)
-    min_unit = data["Total_objects"].min()
+    min_object = data["Total_objects"].min()
     shared.update_readme(
         args,
         SECTION_FILE,
@@ -119,17 +119,17 @@ def smithsonian_intro(args):
         "Overview",
         None,
         None,
-        "The Smithsonian data returns the overall "
+        "The Smithsonian Institute data returns the overall"
         " statistics of CC0 legal tool records."
-        " It serves as the main legal tool used by Smithsonian."
+        " It serves as the main legal tool used by Smithsonian Institute."
         "\n"
-        f"The results indicate a total record of {total_objects} objects,"
-        f" with a breakdown of {CC0_records} objects without CC0 Media and"
-        f" {CC0_records_with_media} objects with CC0 Media, taking a"
-        f" percentage of {CC0_media_percentage} in each unit."
+        f"The results indicate a total record of {total_objects:,} objects,"
+        f" with a breakdown of {CC0_records:,} objects without CC0 Media and"
+        f" {CC0_records_with_media:,} objects with CC0 Media, taking a"
+        f" percentage of {CC0_media_percentage} in each institute member."
         f" There are {num_units} unique units in the data"
-        " representing museums, libraries, zoos and many other"
-        f" with a minimum of {min_unit} objects.",
+        " representing museums, libraries, zoos and other institutions"
+        f" with a minimum of {min_object} objects.",
     )
 
 
@@ -143,7 +143,7 @@ def plot_totals_by_top10_units(args):
         "smithsonian_totals_by_units.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit"
+    name_label = "Unit_name"
     data_label = "Total_objects"
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
     data["Total_objects"] = data["Total_objects"].astype(int)
@@ -175,11 +175,11 @@ def plot_totals_by_top10_units(args):
         SECTION_TITLE,
         title,
         image_path,
-        "Plots showing totals by units.",
-        "This shows the distribution of top 10"
-        " units/ sub providers across smithsonian"
-        f" with an average of {average_unit} objects"
-        " across the top 10 sub providers.",
+        "Plots showing totals by units. This shows the"
+        " distribution of top 10 institute member across"
+        " Smithsonian Institute with an average of"
+        f" {average_unit:,} objects across the top 10"
+        "Institute members.",
     )
 
 
@@ -193,7 +193,7 @@ def plot_totals_by_lowest10_units(args):
         "smithsonian_totals_by_units.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit"
+    name_label = "Unit_name"
     data_label = "Total_objects"
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
     data["Total_objects"] = data["Total_objects"].astype(int)
@@ -227,9 +227,9 @@ def plot_totals_by_lowest10_units(args):
         image_path,
         "Plots showing totals by units.",
         "This shows the distribution of lowest 10"
-        " units/ sub providers across smithsonian"
+        " institute member across Smithsonian Institute"
         f" with an average of {average_unit} objects"
-        " across the lowest 10 sub providers.",
+        " across the lowest 10 institute members.",
     )
 
 
@@ -243,7 +243,7 @@ def plot_totals_by_records(args):
         "smithsonian_totals_by_records.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit"
+    name_label = "Unit_name"
     stack_labels = [
         "CC0_without_media_percentage",
         "CC0_with_media_percentage",
@@ -274,8 +274,8 @@ def plot_totals_by_records(args):
         SECTION_TITLE,
         title,
         image_path,
-        "Plots showing totals by CC0 records.",
-        "This is the breakdown of CC0 records"
+        "Plots showing totals by CC0 records. This is the"
+        " breakdown of top 10 records with highest CC0 records"
         " without media, CC0 records with media and records"
         " that are not associated with CC0.",
     )

@@ -82,13 +82,13 @@ def process_totals_by_units(args, count_data):
     data = {}
 
     for row in count_data.itertuples(index=False):
-        unit = str(row.UNIT)
+        unit = str(row.UNIT_NAME)
         total_objects = int(row.TOTAL_OBJECTS)
 
         data[unit] = total_objects
 
-    data = pd.DataFrame(data.items(), columns=["Unit", "Total_objects"])
-    data.sort_values("Unit", ascending=True, inplace=True)
+    data = pd.DataFrame(data.items(), columns=["Unit_name", "Total_objects"])
+    data.sort_values("Unit_name", ascending=True, inplace=True)
     data.reset_index(drop=True, inplace=True)
     file_path = shared.path_join(
         PATHS["data_phase"], "smithsonian_totals_by_units.csv"
@@ -104,7 +104,7 @@ def process_totals_by_records(args, count_data):
     data = {}
 
     for row in count_data.itertuples(index=False):
-        unit = str(row.UNIT)
+        unit = str(row.UNIT_NAME)
         CC0_records = int(row.CC0_RECORDS)
         CC0_records_with_CC0_media = int(row.CC0_RECORDS_WITH_CC0_MEDIA)
         total_objects = int(row.TOTAL_OBJECTS)
@@ -126,7 +126,7 @@ def process_totals_by_records(args, count_data):
     data = (
         pd.DataFrame.from_dict(data, orient="index")
         .reset_index()
-        .rename(columns={"index": "Unit"})
+        .rename(columns={"index": "Unit_name"})
     )
     data["CC0_without_media_percentage"] = (
         (
@@ -145,7 +145,7 @@ def process_totals_by_records(args, count_data):
         * 100
     ).round(2)
 
-    data.sort_values("Unit", ascending=True, inplace=True)
+    data.sort_values("Unit_name", ascending=True, inplace=True)
     data.reset_index(drop=True, inplace=True)
 
     file_path = shared.path_join(
@@ -166,7 +166,8 @@ def main():
         LOGGER,
         file_count,
         usecols=[
-            "UNIT",
+            "UNIT_CODE",
+            "UNIT_NAME",
             "CC0_RECORDS",
             "CC0_RECORDS_WITH_CC0_MEDIA",
             "TOTAL_OBJECTS",
