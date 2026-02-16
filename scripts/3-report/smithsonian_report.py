@@ -277,7 +277,7 @@ def plot_totals_by_records(args):
         title,
         image_path,
         "Plots showing totals by CC0 records. This is the"
-        " top 10 records with a breakdown of CC0 records"
+        " top 10 units with a breakdown of CC0 records"
         " without media, CC0 records with media and records"
         " that are not associated with CC0.",
     )
