@@ -138,7 +138,7 @@ def check_for_completion():
     completed_units = False
 
     try:
-        with open(FILE_1_METRICS, "r", newline="") as file_obj:
+        with open(FILE_1_METRICS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 0:
                 completed_metrics = True
@@ -146,7 +146,7 @@ def check_for_completion():
         pass  # File may not be found without --enable-save, etc.
 
     try:
-        with open(FILE_2_UNITS, "r", newline="") as file_obj:
+        with open(FILE_2_UNITS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 30:
                 completed_units = True
@@ -270,7 +270,8 @@ def main():
     session = shared.get_session()
     fetch_unit_codes(session)
     data_metrics, data_units = query_smithsonian(args, session)
-    args = write_data(args, data_metrics, data_units)
+    shared.rows_to_csv(args, FILE_1_METRICS, HEADER_1_METRICS, data_metrics)
+    shared.rows_to_csv(args, FILE_2_UNITS, HEADER_2_UNITS, data_units)
     args = shared.git_add_and_commit(
         args,
         PATHS["repo"],
