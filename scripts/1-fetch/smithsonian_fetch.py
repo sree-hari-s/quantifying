@@ -74,7 +74,7 @@ def check_for_completion():
     completed_units = False
 
     try:
-        with open(FILE_1_METRICS, "r", newline="") as file_obj:
+        with open(FILE_1_METRICS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 0:
                 completed_metrics = True
@@ -82,7 +82,7 @@ def check_for_completion():
         pass  # File may not be found without --enable-save, etc.
 
     try:
-        with open(FILE_2_UNITS, "r", newline="") as file_obj:
+        with open(FILE_2_UNITS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 30:
                 completed_units = True
@@ -93,32 +93,6 @@ def check_for_completion():
         raise shared.QuantifyingException(
             f"Data fetch completed for {QUARTER}", 0
         )
-
-
-def write_data(args, data_metrics, data_units):
-    if not args.enable_save:
-        return args
-
-    # Create data directory for this phase
-    os.makedirs(PATHS["data_phase"], exist_ok=True)
-
-    with open(FILE_1_METRICS, "w", encoding="utf-8", newline="\n") as file_obj:
-        writer = csv.DictWriter(
-            file_obj, fieldnames=HEADER_1_METRICS, dialect="unix"
-        )
-        writer.writeheader()
-        for row in data_metrics:
-            writer.writerow(row)
-
-    with open(FILE_2_UNITS, "w", encoding="utf-8", newline="\n") as file_obj:
-        writer = csv.DictWriter(
-            file_obj, fieldnames=HEADER_2_UNITS, dialect="unix"
-        )
-        writer.writeheader()
-        for row in data_units:
-            writer.writerow(row)
-
-    return args
 
 
 def query_smithsonian(args, session):
@@ -177,7 +151,8 @@ def main():
     check_for_completion()
     session = shared.get_session()
     data_metrics, data_units = query_smithsonian(args, session)
-    args = write_data(args, data_metrics, data_units)
+    shared.rows_to_csv(args, FILE_1_METRICS, HEADER_1_METRICS, data_metrics)
+    shared.rows_to_csv(args, FILE_2_UNITS, HEADER_2_UNITS, data_units)
     args = shared.git_add_and_commit(
         args,
         PATHS["repo"],
