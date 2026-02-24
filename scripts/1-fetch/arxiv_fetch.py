@@ -471,7 +471,7 @@ def write_data(args, data):
             )
     rows.sort(key=itemgetter("TOOL_IDENTIFIER", "AUTHOR_BUCKET"))
     shared.rows_to_csv(
-        args, HEADER_AUTHOR_BUCKET, rows, FILE_ARXIV_AUTHOR_BUCKET
+        args, FILE_ARXIV_AUTHOR_BUCKET, HEADER_AUTHOR_BUCKET, rows
     )
 
     # Save category report
@@ -492,7 +492,7 @@ def write_data(args, data):
             )
     rows.sort(key=itemgetter("TOOL_IDENTIFIER", "CATEGORY_CODE"))
     shared.rows_to_csv(
-        args, HEADER_CATEGORY_REPORT, rows, FILE_ARXIV_CATEGORY_REPORT
+        args, FILE_ARXIV_CATEGORY_REPORT, HEADER_CATEGORY_REPORT, rows
     )
 
     # Save tool counts report
@@ -501,7 +501,7 @@ def write_data(args, data):
     for identifier, count in data["tool_counts"].items():
         rows.append({"TOOL_IDENTIFIER": identifier, "COUNT": count})
     rows.sort(key=itemgetter("TOOL_IDENTIFIER"))
-    shared.rows_to_csv(args, HEADER_COUNT, rows, FILE_ARXIV_COUNT)
+    shared.rows_to_csv(args, FILE_ARXIV_COUNT, HEADER_COUNT, rows)
 
     # Save year count report
     # fetched_data["year_counts"]: {identifer: {year: count}}
@@ -512,7 +512,7 @@ def write_data(args, data):
                 {"TOOL_IDENTIFIER": identifier, "YEAR": year, "COUNT": count}
             )
     rows.sort(key=itemgetter("TOOL_IDENTIFIER", "YEAR"))
-    shared.rows_to_csv(args, HEADER_YEAR, FILE_ARXIV_YEAR, rows)
+    shared.rows_to_csv(args, FILE_ARXIV_YEAR, HEADER_YEAR, rows)
 
 
 def write_provence(args, cc_articles_found):
