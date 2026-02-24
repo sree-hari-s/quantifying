@@ -208,7 +208,7 @@ def stacked_barh_plot(
             for current_left, width in zip(left, data[label])
         ]
 
-    ax.set_xlabel("Number of works")
+    ax.set_xlabel("Percentage of works")
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(number_formatter))
     ax.set_yticks(range(len(data.index)))
     ax.set_yticklabels([wrap_label(label) for label in data.index])

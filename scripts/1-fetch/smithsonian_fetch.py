@@ -40,7 +40,7 @@ HEADER_1_METRICS = [
 ]
 HEADER_2_UNITS = [
     "UNIT_CODE",
-    "UNIT_NAME",
+    "DATA_SOURCE",
     "CC0_RECORDS",
     "CC0_RECORDS_WITH_CC0_MEDIA",
     "TOTAL_OBJECTS",
@@ -250,7 +250,7 @@ def query_smithsonian(args, session):
         data_units.append(
             {
                 "UNIT_CODE": unit["unit"],
-                "UNIT_NAME": UNIT_MAP.get(unit["unit"], unit["unit"]),
+                "DATA_SOURCE": UNIT_MAP.get(unit["unit"], unit["unit"]),
                 "CC0_RECORDS": unit["metrics"]["CC0_records"],
                 "CC0_RECORDS_WITH_CC0_MEDIA": unit["metrics"][
                     "CC0_records_with_CC0_media"

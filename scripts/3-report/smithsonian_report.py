@@ -143,7 +143,7 @@ def plot_totals_by_top10_units(args):
         "smithsonian_totals_by_units.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit_name"
+    name_label = "Data_source"
     data_label = "Total_objects"
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
     data["Total_objects"] = data["Total_objects"].astype(int)
@@ -157,6 +157,7 @@ def plot_totals_by_top10_units(args):
         title=title,
         name_label=name_label,
         data_label=data_label,
+        bar_ylabel="Data Sources",
     )
 
     image_path = shared.path_join(
@@ -193,7 +194,7 @@ def plot_totals_by_lowest10_units(args):
         "smithsonian_totals_by_units.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit_name"
+    name_label = "Data_source"
     data_label = "Total_objects"
     data = shared.open_data_file(LOGGER, file_path, index_col=name_label)
     data["Total_objects"] = data["Total_objects"].astype(int)
@@ -207,6 +208,7 @@ def plot_totals_by_lowest10_units(args):
         title=title,
         name_label=name_label,
         data_label=data_label,
+        bar_ylabel="Data Sources",
     )
 
     image_path = shared.path_join(
@@ -243,7 +245,7 @@ def plot_totals_by_top10_unit_records(args):
         "smithsonian_totals_by_records.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit_name"
+    name_label = "Data_source"
     data_label = "Total_objects"
     stack_labels = [
         "CC0_without_media_percentage",
@@ -260,6 +262,7 @@ def plot_totals_by_top10_unit_records(args):
         title=title,
         name_label=name_label,
         stack_labels=stack_labels,
+        ylabel="Data Sources",
     )
     image_path = shared.path_join(
         PATHS["data_phase"], "smithsonian_by_top10_unit_records.png"
@@ -293,7 +296,7 @@ def plot_totals_by_lowest10_unit_records(args):
         "smithsonian_totals_by_records.csv",
     )
     LOGGER.info(f"data file: {file_path.replace(PATHS['repo'], '.')}")
-    name_label = "Unit_name"
+    name_label = "Data_source"
     data_label = "Total_objects"
     stack_labels = [
         "CC0_without_media_percentage",
@@ -310,6 +313,7 @@ def plot_totals_by_lowest10_unit_records(args):
         title=title,
         name_label=name_label,
         stack_labels=stack_labels,
+        ylabel="Data Sources",
     )
     image_path = shared.path_join(
         PATHS["data_phase"], "smithsonian_by_lowest10_unit_records.png"
