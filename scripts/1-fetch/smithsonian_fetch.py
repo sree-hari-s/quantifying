@@ -117,7 +117,7 @@ def check_for_completion():
     completed_units = False
 
     try:
-        with open(FILE_1_METRICS, "r", newline="") as file_obj:
+        with open(FILE_1_METRICS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 0:
                 completed_metrics = True
@@ -125,7 +125,7 @@ def check_for_completion():
         pass  # File may not be found without --enable-save, etc.
 
     try:
-        with open(FILE_2_UNITS, "r", newline="") as file_obj:
+        with open(FILE_2_UNITS, "r", encoding="utf-8") as file_obj:
             reader = csv.DictReader(file_obj, dialect="unix")
             if len(list(reader)) > 30:
                 completed_units = True
@@ -136,59 +136,6 @@ def check_for_completion():
         raise shared.QuantifyingException(
             f"Data fetch completed for {QUARTER}", 0
         )
-
-
-def write_data(args, data_metrics, data_units):
-    if not args.enable_save:
-        return args
-
-    # Create data directory for this phase
-    os.makedirs(PATHS["data_phase"], exist_ok=True)
-
-    with open(FILE_1_METRICS, "w", encoding="utf-8", newline="\n") as file_obj:
-        writer = csv.DictWriter(
-            file_obj, fieldnames=HEADER_1_METRICS, dialect="unix"
-        )
-        writer.writeheader()
-        for row in data_metrics:
-            writer.writerow(row)
-
-    with open(FILE_2_UNITS, "w", encoding="utf-8", newline="\n") as file_obj:
-        writer = csv.DictWriter(
-            file_obj, fieldnames=HEADER_2_UNITS, dialect="unix"
-        )
-        writer.writeheader()
-        for row in data_units:
-            writer.writerow(row)
-
-    return args
-
-
-def fetch_unit_codes(session):
-    LOGGER.info("Fetching current unit codes from Smithsonian API")
-    url = "https://api.si.edu/openaccess/api/v1.0/terms/unit_code"
-    params = {"api_key": DATA_GOV_API_KEY}
-    try:
-        with session.get(url, params=params) as response:
-            response.raise_for_status()
-            api_codes = set(response.json()["response"]["terms"])
-    except requests.HTTPError as e:
-        raise shared.QuantifyingException(f"HTTP Error: {e}", 1)
-    except requests.RequestException as e:
-        raise shared.QuantifyingException(f"Request Exception: {e}", 1)
-    except KeyError as e:
-        raise shared.QuantifyingException(f"KeyError: {e}", 1)
-
-    map_codes = set(unit_map.keys())
-    new_codes = sorted(api_codes - map_codes)
-    removed_codes = sorted(map_codes - api_codes)
-
-    if new_codes:
-        LOGGER.warning(f"New unit code(s) not in unit_map: {new_codes}")
-    if removed_codes:
-        LOGGER.warning(f"unit_map code(s) no longer in API: {removed_codes}")
-    if not new_codes and not removed_codes:
-        LOGGER.info("unit_map is up to date")
 
 
 def query_smithsonian(args, session):
@@ -246,9 +193,9 @@ def main():
     shared.paths_log(LOGGER, PATHS)
     check_for_completion()
     session = shared.get_session()
-    fetch_unit_codes(session)
     data_metrics, data_units = query_smithsonian(args, session)
-    args = write_data(args, data_metrics, data_units)
+    shared.rows_to_csv(args, FILE_1_METRICS, HEADER_1_METRICS, data_metrics)
+    shared.rows_to_csv(args, FILE_2_UNITS, HEADER_2_UNITS, data_units)
     args = shared.git_add_and_commit(
         args,
         PATHS["repo"],
