@@ -93,7 +93,7 @@ def process_totals_by_units(args, count_data):
     file_path = shared.path_join(
         PATHS["data_phase"], "smithsonian_totals_by_units.csv"
     )
-    shared.data_to_csv(args, data, file_path)
+    shared.dataframe_to_csv(args, data, file_path)
 
 
 def process_totals_by_records(args, count_data):
@@ -148,7 +148,7 @@ def process_totals_by_records(args, count_data):
     file_path = shared.path_join(
         PATHS["data_phase"], "smithsonian_totals_by_records.csv"
     )
-    shared.data_to_csv(args, data, file_path)
+    shared.dataframe_to_csv(args, data, file_path)
 
 
 def main():
