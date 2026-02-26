@@ -27,7 +27,7 @@ def annotate_ylabels(ax, data, data_label, colors):
         # annotate totals
         ax.annotate(
             f"    {int(row[data_label]):>15,d}",
-            (indent, i - 0.1),
+            (indent, i - 0.22),
             xycoords=("axes points", "data"),
             color=colors[c],
             fontsize="x-small",
@@ -73,7 +73,7 @@ def combined_plot(
         height = 2.5
 
     fig, (ax1, ax2) = plt.subplots(
-        1, 2, figsize=(8, height), width_ratios=(2, 1), layout="constrained"
+        1, 2, figsize=(10, height), width_ratios=(2, 1), layout="constrained"
     )
     colors = colormaps["tab10"].colors
 
@@ -82,7 +82,7 @@ def combined_plot(
     tick_labels = []
     for index, row in data.iterrows():
         count = f"{int(row[data_label]):,d}"
-        tick_labels.append(f"{index}\n{' ' * len(count)}")
+        tick_labels.append(f"{wrap_label(index)}\n{' ' * len(count)}")
     if bar_xscale == "log":
         log = True
     else:
@@ -144,13 +144,37 @@ def number_formatter(x, pos):
         return f"{x:,.0f}"
 
 
+def wrap_label(label):
+    if " " not in label:
+        return label
+
+    midpoint = len(label) // 2
+    # find nearest space to midpoint
+    left = label.rfind(" ", 0, midpoint)
+    right = label.find(" ", midpoint)
+
+    if left == -1:
+        split_index = right
+    elif right == -1:
+        split_index = left
+    else:
+        if midpoint - left <= right - midpoint:
+            split_index = left
+        else:
+            split_index = right
+    if split_index == -1:
+        return label
+
+    return f"{label[:split_index]}\n{label[split_index + 1:]}"
+
+
 def stacked_barh_plot(
     args,
     data,
     title,
     name_label,
     stack_labels,
-    xscale=None,
+    xscale="linear",
     ylabel=None,
 ):
     """
@@ -164,7 +188,7 @@ def stacked_barh_plot(
     plt.rcParams.update({"font.family": "monospace", "figure.dpi": 300})
 
     height = max(2.5, 1 + len(data) * 0.5)
-    fig, ax = plt.subplots(figsize=(8, height), layout="constrained")
+    fig, ax = plt.subplots(figsize=(10, height), layout="constrained")
 
     colors = colormaps["tab10"].colors
     left = [0] * len(data)
@@ -184,9 +208,10 @@ def stacked_barh_plot(
             for current_left, width in zip(left, data[label])
         ]
 
-    ax.set_xlabel("Number of works")
-    # ax.set_xlim(0, 100)
+    ax.set_xlabel("Percentage of works")
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(number_formatter))
+    ax.set_yticks(range(len(data.index)))
+    ax.set_yticklabels([wrap_label(label) for label in data.index])
 
     if ylabel:
         ax.set_ylabel(ylabel)
@@ -197,7 +222,8 @@ def stacked_barh_plot(
         title="Type",
         fontsize="x-small",
         title_fontsize="x-small",
-        loc="upper right",
+        loc="upper left",
+        bbox_to_anchor=(1.02, 1),
     )
 
     plt.suptitle(title)
