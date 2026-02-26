@@ -39,12 +39,76 @@ HEADER_1_METRICS = [
     "TOTAL_OBJECTS",
 ]
 HEADER_2_UNITS = [
-    "UNIT",
+    "UNIT_CODE",
+    "DATA_SOURCE",
     "CC0_RECORDS",
     "CC0_RECORDS_WITH_CC0_MEDIA",
     "TOTAL_OBJECTS",
 ]
 QUARTER = os.path.basename(PATHS["data_quarter"])
+
+# Manually compiled unit code and name from URL
+# 'https://github.com/Smithsonian/OpenAccess'
+UNIT_MAP = {
+    "AAA": "Archives of American Art",
+    "AAG": "Archives of American Gardens",
+    "ACM": "Anacostia Community Museum",
+    "ACMA": "Anacostia Community Museum Archives",
+    "CFCHFOLKLIFE": "Ralph Rinzler Folklife Archives and Collections",
+    "CHNDM": "Cooper Hewitt, Smithsonian Design Museum",
+    "FBR": "Smithsonian Field Book Project",
+    "FSG": "Freer Gallery of Art and Arthur M. Sackler Gallery",
+    "HAC": "Smithsonian Gardens",
+    "HMSG": "Hirshhorn Museum and Sculpture Garden",
+    "HSFA": "Human Studies Film Archives",
+    "NASM": "National Air and Space Museum",
+    "NMAAHC": "National Museum of African American History and Culture",
+    "NMAH": "National Museum of American History",
+    "NMAI": "National Museum of the American Indian",
+    "NMAfA": "National Museum of African Art",
+    "NMNHANTHRO": ("National Musuem of Natural History - Anthropology Dept."),
+    "NMNHBIRDS": (
+        "National Musuem of Natural History - Vertebrate Zoology - Birds"
+        " Division"
+    ),
+    "NMNHBOTANY": ("National Musuem of Natural History - Botany Dept."),
+    "NMNHEDUCATION": (
+        "National Musuem of Natural History - Education & Outreach"
+    ),
+    "NMNHENTO": ("National Musuem of Natural History - Entomology Dept."),
+    "NMNHFISHES": (
+        "National Musuem of Natural History - Vertebrate Zoology - Fishes"
+        " Division"
+    ),
+    "NMNHHERPS": (
+        "National Musuem of Natural History - Vertebrate Zoology - Herpetology"
+        " Division"
+    ),
+    "NMNHINV": (
+        "National Musuem of Natural History - Invertebrate Zoology Dept."
+    ),
+    "NMNHMAMMALS": (
+        "National Musuem of Natural History"
+        " - Vertebrate Zoology - Mammals Division"
+    ),
+    "NMNHMINSCI": (
+        "National Musuem of Natural History" " - Mineral Sciences Dept."
+    ),
+    "NMNHPALEO": ("National Musuem of Natural History - Paleobiology Dept."),
+    "NPG": "National Portrait Gallery",
+    "NPM": "National Postal Museum",
+    "NZP": "Smithsonian's National Zoo & Conservation Biology Institute",
+    "OCIO_DPO3D": "OCIO Digital Preservation & 3D Team",
+    "OFEO-SG": "Office of Facilities Engineering &"
+    " Operations – Smithsonian Gardens",
+    "SAAM": "Smithsonian American Art Museum",
+    "SIA": "Smithsonian Institution Archives",
+    "SIL": "Smithsonian Libraries",
+    "SILAF": "Smithsonian Institution Libraries, African Section",
+    "SILNMAHTL": "Smithsonian Institution Libraries,"
+    " National Museum of American History, Library",
+    "SLA_SRO": "Smithsonian Libraries Archives, Special Research/Operations",
+}
 
 
 def parse_arguments():
@@ -102,7 +166,7 @@ def query_smithsonian(args, session):
             " API key is set in .env",
             1,
         )
-    LOGGER.info("Fetch CC0 metrics and units from units from Smithsonain")
+    LOGGER.info("Fetch CC0 metrics and units from units from Smithsonian")
     url = "https://api.si.edu/openaccess/api/v1.0/stats"
     params = {"api_key": DATA_GOV_API_KEY}
     try:
@@ -132,7 +196,8 @@ def query_smithsonian(args, session):
             continue
         data_units.append(
             {
-                "UNIT": unit["unit"],
+                "UNIT_CODE": unit["unit"],
+                "DATA_SOURCE": UNIT_MAP.get(unit["unit"], unit["unit"]),
                 "CC0_RECORDS": unit["metrics"]["CC0_records"],
                 "CC0_RECORDS_WITH_CC0_MEDIA": unit["metrics"][
                     "CC0_records_with_CC0_media"
@@ -140,7 +205,7 @@ def query_smithsonian(args, session):
                 "TOTAL_OBJECTS": unit["total_objects"],
             }
         )
-    data_units = sorted(data_units, key=itemgetter("UNIT"))
+    data_units = sorted(data_units, key=itemgetter("UNIT_CODE"))
     LOGGER.info(f"Fetched stats for {len(data_units)} units")
     return data_metrics, data_units
 
