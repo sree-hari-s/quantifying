@@ -68,24 +68,24 @@ UNIT_MAP = {
     "NMAfA": "National Museum of African Art",
     "NMNHANTHRO": ("National Musuem of Natural History - Anthropology Dept."),
     "NMNHBIRDS": (
-        "National Musuem of Natural History"
-        " - Vertebrate Zoology - Birds Division"
+        "National Musuem of Natural History - Vertebrate Zoology - Birds"
+        " Division"
     ),
     "NMNHBOTANY": ("National Musuem of Natural History - Botany Dept."),
     "NMNHEDUCATION": (
-        "National Musuem of Natural History" " - Education & Outreach"
+        "National Musuem of Natural History - Education & Outreach"
     ),
     "NMNHENTO": ("National Musuem of Natural History - Entomology Dept."),
     "NMNHFISHES": (
-        "National Musuem of Natural History"
-        " - Vertebrate Zoology - Fishes Division"
+        "National Musuem of Natural History - Vertebrate Zoology - Fishes"
+        " Division"
     ),
     "NMNHHERPS": (
-        "National Musuem of Natural History"
-        " - Vertebrate Zoology - Herpetology Division"
+        "National Musuem of Natural History - Vertebrate Zoology - Herpetology"
+        " Division"
     ),
     "NMNHINV": (
-        "National Musuem of Natural History" " - Invertebrate Zoology Dept."
+        "National Musuem of Natural History - Invertebrate Zoology Dept."
     ),
     "NMNHMAMMALS": (
         "National Musuem of Natural History"
